@@ -130,7 +130,7 @@ foreach (sort keys %stlibname) {
                   # Drop the first space and everything following it
                   s| .*||;
                   # Drop OpenSSL dynamic version information if there is any
-                  s|\@\@.+$||;
+                  s|\@.+$||;
                   # Return the result
                   $_
               }

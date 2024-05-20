@@ -1444,6 +1444,17 @@ int EVP_CIPHER_CTX_rand_key(EVP_CIPHER_CTX *ctx, unsigned char *key)
 #endif /* FIPS_MODULE */
 }
 
+#ifndef FIPS_MODULE
+# if defined OPENSSL_SYS_LINUX && defined OPENSSL_SHLIB
+#  if defined __GNUC__ && __GNUC__ >= 11
+__attribute__ ((symver ("EVP_CIPHER_CTX_dup@OPENSSL_3.1.0"),
+                symver ("EVP_CIPHER_CTX_dup@@OPENSSL_3.2.0")))
+#  else
+__asm__(".symver EVP_CIPHER_CTX_dup,EVP_CIPHER_CTX_dup@OPENSSL_3.1.0");
+__asm__(".symver EVP_CIPHER_CTX_dup,EVP_CIPHER_CTX_dup@@OPENSSL_3.2.0");
+#  endif /* __GNUC__ >= 10 */
+# endif /* OPENSSL_SYS_LINUX && OPENSSL_SHLIB */
+#endif /* !FIPS_MODULE */
 EVP_CIPHER_CTX *EVP_CIPHER_CTX_dup(const EVP_CIPHER_CTX *in)
 {
     EVP_CIPHER_CTX *out = EVP_CIPHER_CTX_new();
